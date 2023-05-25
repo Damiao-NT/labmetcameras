@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <title>Frontend Bootcamp</title>
+  <script src="static/js/index.js"></script>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top" id="navbar">
+    <div class="container">
+      <a href="#" class="navbar-brand">LAMBET</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navmenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a href="#learn" class="nav-link">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Showcase -->
+  <section class="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
+    <div class="container">
+      <div class="d-sm-flex align-items-center justify-content-between">
+        <div>
+          <h1>SISTEMA DE <span class="text-warning">MONITORAMENTO</span></h1>
+          <p class="lead my-4">
+            A finalidade do Laboratório de Metrologia (LABMET) de Campina Grande é promover a criação,
+            o desenvolvimento e o aperfeiçoamento de atividades de referência em calibração de sistemas elétricos.
+          </p>
+          <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#enroll">
+            Inserir Nova Câmera
+          </button>
+        </div>
+        <div class="d-flex justify-content-end align-items-start">
+          <img src="{{ url_for('static', filename='img/10077.png') }}" alt=""
+            style="max-width: 600px; margin-top: -5px;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra azul que faz a delimitação entre as câmeras e a parte escrita -->
+  <section class="bg-primary text-light p-3">
+    <div class="container">
+      <div class="d-md-flex justify-content-between align-items-center">
+      </div>
+    </div>
+  </section>
+
+  <section class="p-5 d-flex justify-content-center">
+    <div class="container">
+      <div class="row text-center justify-content-center g-5">
+        <div class="col-md-5">
+          <div class="card bg-dark text-light">
+            <div class="card-body text-center">
+              <div class="Gallery">
+                <img src="{{ url_for('video') }}" onclick="FullView(this.src)" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="card bg-dark text-light">
+            <div class="card-body text-center">
+              <div class="Gallery">
+                <img src="{{ url_for('video') }}" onclick="FullView(this.src)" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="FullImageView">
+    <img id="FullImage" />
+    <span id="CloseButton" onclick="CloseFullView()">X</span>
+  </div>
+
+  <script type="text/javascript">
+    function FullView(ImgLink) {
+      document.getElementById("FullImage").src = ImgLink;
+      document.getElementById("FullImageView").style.display = "block";
+      document.getElementById("navbar").style.display = "none";
+    }
+
+    function CloseFullView() {
+      document.getElementById("FullImageView").style.display = "none";
+      document.getElementById("navbar").style.display = "block";
+    }
+  </script>
+  <section id="learn" class="p-5 bg-secondary text-light">
+    <div class="container">
+      <div class="row align-items-center justify-content-between">
+        <div class="col-md p-5">
+          <h2>Informações</h2>
+          <p class="lead">
+            Desenvolvedor: Damião Neto<br>
+            Email: damiao.neto@ee.ufcg.edu.br
+          </p>
+          <a href="#" class="btn btn-light mt-3">
+            <i class="bi bi-chevron-right"></i> Entrar em Contato
+          </a>
+        </div>
+        <div class="col-md-100">
+          <img src="img/react.svg" class="img-fluid" alt="" />
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>
