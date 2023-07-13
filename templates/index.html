@@ -63,24 +63,23 @@
       </div>
     </div>
   </section>
-
-  <section class="p-5 d-flex justify-content-center">
+  <section class="p-10 d-flex justify-content-center">
     <div class="container">
-      <div class="row text-center justify-content-center g-5">
-        <div class="col-md-5">
+      <div class="row text-center justify-content-center g-10">
+        <div class="col">
           <div class="card bg-dark text-light">
             <div class="card-body text-center">
               <div class="Gallery">
-                <img src="{{ url_for('video') }}" onclick="FullView(this.src)" />
+                <img src="{{ url_for('video_feed', camera_id=0) }}" onclick="FullView(this.src)" class="custom-image">
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-5">
+        <div class="col">
           <div class="card bg-dark text-light">
             <div class="card-body text-center">
               <div class="Gallery">
-                <img src="{{ url_for('video') }}" onclick="FullView(this.src)" />
+                <img src="{{ url_for('video_feed', camera_id=1) }}" onclick="FullView(this.src)" class="custom-image">
               </div>
             </div>
           </div>
