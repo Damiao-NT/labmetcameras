@@ -1,44 +1,69 @@
-from flask import Flask, render_template, Response
 import cv2
-from gevent.pywsgi import WSGIServer
-import webbrowser
-from threading import Timer
+import os
+from flask import Flask, render_template, Response
 
 app = Flask(__name__)
-camera = cv2.VideoCapture(0)
 
-def generate_frames():
+cameras = [
+    {
+        'username': 'admin',
+        'password': 'portariaM1',
+        'ip': '150.165.37.23',
+        'port': '554',
+        'url': 'rtsp://admin:portariaM1@150.165.37.23:554/onvif1'
+    },
+    {
+        'username': 'admin_password',
+        'password': 'tlJwpbo6_channel=1_stream=0.sdp?real_stream',
+        'ip': '150.165.37.14',
+        'port': '554',
+        'url': 'rtsp://150.165.37.14:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream'
+    }
+]
+
+# Define o tamanho desejado para o vídeo
+VIDEO_WIDTH = 440
+VIDEO_HEIGHT = 280
+
+# Só roda se for ffmpeg
+os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+
+def generate_frames(camera):
+    url = camera['url']
+    print('Conectando com: ' + url)
+    cap = cv2.VideoCapture(url, cv2.CAP_FFMPEG)
+
+    # Configura o tamanho do vídeo capturado
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT)
+
     while True:
-        # Ler o frame da câmera
-        success, frame = camera.read()
-        if not success:
+        ret, frame = cap.read()
+        if not ret:
             break
         else:
-            # Codificar o frame como JPEG
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
 
-        # Enviar o frame como resposta
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            # Redimensiona o frame para o tamanho desejado
+            frame = cv2.resize(frame, (VIDEO_WIDTH, VIDEO_HEIGHT))
+
+            # Codifica o frame com as faces detectadas como JPEG
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame_with_faces = buffer.tobytes()
+
+            # Envia o frame com as faces detectadas como resposta
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_with_faces + b'\r\n')
+
+
 @app.route('/')
 def index():
-    # return render_template('main.html')
     return render_template('index.html')
 
-@app.route('/video')
-def video():
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video_feed/<int:camera_id>')
+def video_feed(camera_id):
+    if camera_id < 0 or camera_id >= len(cameras):
+        return 'Invalid camera ID'
+    return Response(generate_frames(cameras[camera_id]), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-    http_server = WSGIServer(("127.0.0.1", 8080), app)
-    http_server.start()
-    
-    # Abrir a página web automaticamente
-    webbrowser.open('http://127.0.0.1:8080')
-
-    http_server.serve_forever()
-    app.run(debug=True)
-  
+    app.run()
